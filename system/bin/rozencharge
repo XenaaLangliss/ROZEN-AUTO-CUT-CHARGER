@@ -1,0 +1,106 @@
+#!/system/bin/sh
+
+# ==============================
+# LIMIT (LOAD / DEFAULT)
+# ==============================
+if [ -z "$(getprop persist.xenaa.batterylimit)" ]; then
+    resetprop -n persist.xenaa.batterylimit 100
+fi
+
+# ==============================
+# FIND CAPACITY
+# ==============================
+locate_capacity() {
+    for x in /sys/class/power_supply/*/capacity; do
+        [ -f "$x" ] && echo "$x" && return
+    done
+}
+
+# ==============================
+# FIND ONLINE (NON-BATTERY)
+# ==============================
+locate_online() {
+    for x in /sys/class/power_supply/*/online; do
+        echo "$x" | grep -qi "battery" && continue
+        [ -f "$x" ] && echo "$x" && return
+    done
+}
+
+# ==============================
+# WRITE
+# ==============================
+write() {
+    [ ! -f "$2" ] && return
+    [ ! -w "$2" ] && chmod 644 "$2" 2>/dev/null
+    echo "$1" > "$2" 2>/dev/null
+}
+
+PATH_CAP=$(locate_capacity)
+PATH_ONLINE=$(locate_online)
+
+[ -z "$PATH_CAP" ] || [ -z "$PATH_ONLINE" ] && exit 1
+
+# ==============================
+# STATE
+# ==============================
+RZNN="none"
+SENT="no"
+LOCK="0"
+LAST="0"
+
+# ==============================
+# LOOP
+# ==============================
+while true; do
+    LIM=$(getprop persist.xenaa.batterylimit)
+    echo "$LIM" | grep -qE '^[0-9]+$' || { sleep 5; continue; }
+
+    CAP=$(cat "$PATH_CAP" 2>/dev/null)
+    ONLINE_STATE=$(cat "$PATH_ONLINE" 2>/dev/null)
+
+    # ==========================
+    # DETECT CHARGER
+    # ==========================
+    if [ "$ONLINE_STATE" = "0" ] && [ "$LAST" = "1" ]; then
+        LOCK="0"
+        SENT="no"
+    fi
+
+    LAST="$ONLINE_STATE"
+
+    # ==========================
+    # LIMIT → OFF & LOCK
+    # ==========================
+    if [ "$CAP" -ge "$LIM" ]; then
+        LOCK="1"
+        if [ "$RZNN" != "0" ]; then
+            write 0 "$PATH_ONLINE"
+            RZNN="0"
+            if [ "$SENT" = "no" ]; then
+                su -lp 2000 -c "cmd notification post -S bigtext -t 'Rozen Charging' Xenaaaaaa 'Battery reached limit ($LIM%)'"
+                SENT="yes"
+            fi
+        fi
+        sleep 5
+        continue
+    fi
+
+    # ==========================
+    # LOCK ON → STAY OFF
+    # ==========================
+    if [ "$LOCK" = "1" ]; then
+        sleep 5
+        continue
+    fi
+
+    # ==========================
+    # CHARGING NORMAL
+    # ==========================
+    if [ "$RZNN" != "1" ]; then
+        write 1 "$PATH_ONLINE"
+        RZNN="1"
+        SENT="no"
+    fi
+
+    sleep 5
+done

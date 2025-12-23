@@ -1,0 +1,7 @@
+id=RozenAutoCutCharging
+name=Rozen Auto Cut Charging
+version=v2.1 -Fix
+versionCode=1
+author=@XenaaLangliss
+description=Limit charging to maintain battery health on mediatek devices.
+banner=https://raw.githubusercontent.com/XenaaLangliss/ROZEN-AUTO-CUT-CHARGER/rauc/501.jpg

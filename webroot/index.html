@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Battery Charge Limit — Xenaa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Rozen Auto Cut Charging</h1>
+    <div class="health-box">
+      <div class="health-title">Battery Health</div>
+      <div class="health-info">
+        <div class="info-item">
+          <span>Current Capacity:</span>
+          <strong id="current-cap">-</strong>
+        </div>
+        <div class="info-item">
+          <span>Health:</span>
+          <strong id="health-percent">-</strong>
+        </div>
+      </div>
+    </div>
+    <section class="control">
+      <label for="charge-limit-slider">Charging limit</label>
+      <div class="slider-row">
+        <input id="charge-limit-slider" type="range" min="50" max="100" step="1" value="100">
+        <div id="slider-value" class="value">100%</div>
+      </div>
+      <div class="presets">
+        <button class="preset" data-val="80">80%</button>
+        <button class="preset" data-val="85">85%</button>
+        <button class="preset" data-val="90">90%</button>
+        <button class="preset" data-val="95">95%</button>
+        <button class="preset" data-val="100">100% (normal)</button>
+      </div>
+      <div class="actions">
+        <button id="apply-button" class="apply">Apply</button>
+        <button id="refresh-button" class="refresh">Refresh</button>
+      </div>
+      <p class="note">
+        Control your charging limit using the web UI, you can change it here.
+      </p>
+    </section>
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="credit-title">Created by</div>
+        <div class="credit-names">@XenaaLangliss</div>
+      </div>
+      <div class="footer-right status" id="status-line">
+        Status: idle
+      </div>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
