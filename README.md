@@ -1,4 +1,4 @@
-# ROZEN-CUT-CHARGER
+# ROZEN-AUTO-CUT-CHARGER
 
 ![MIT License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Android](https://img.shields.io/badge/Platform-Android-brightgreen)
@@ -39,7 +39,7 @@ Using the WebUI, you can:
 
 ### WebUI – Charging Limit Settings
 <p align="center">
-  <img src="screenshots/webui.jpg" width="320"/>
+  <img src="screenshot/webui.jpg" width="320"/>
 </p>
 
 ---
