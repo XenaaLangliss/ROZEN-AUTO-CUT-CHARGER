@@ -28,7 +28,7 @@ This module includes a **WebUI interface**, making it easy to configure charging
 ## 🖥️ WebUI
 
 Using the WebUI, you can:
-- Adjust charging limit between **50 – 100**
+- Adjust charging limit between **50% – 100%**
 - Apply changes instantly
 
 > Recommended charging limit: **80% – 90%** for optimal battery health.
